@@ -111,10 +111,17 @@ if echo "$crashcore" | grep -q 'singbox'; then
     fi
 else
     . "$CRASHDIR"/starts/clash_check.sh && clash_check
-    if [ "$disoverride" != "1" ];then
-        . "$CRASHDIR"/starts/clash_modify.sh && modify_yaml
-    else
+    . "$CRASHDIR"/starts/clash_modify.sh
+    if [ "$disoverride" != "1" ]; then
+        modify_yaml
+    elif [ "$firewall_area" = "4" ] || clash_config_compatible; then
+        #配置端口与防火墙一致，直接使用原始配置
         ln -sf "$core_config" "$TMPDIR"/config.yaml
+    else
+        #原始配置的端口/routing-mark/DNS/tun与ShellCrash设置不匹配
+        #直接使用会导致流量被转发到错误端口或回环，从而无法上网
+        logger "导入配置与ShellCrash的端口或DNS设置不匹配，已自动改用覆写模式以保证网络可用！" 33 off
+        modify_yaml
     fi
 fi
 #检查下载cnip绕过相关文件

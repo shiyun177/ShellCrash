@@ -1,6 +1,42 @@
 #!/bin/sh
 # Copyright (C) Juewuy
 
+#提取源配置中的顶层YAML锚点定义块
+#部分第三方配置(如Surfing)会在顶层用 &锚点 定义可复用的配置块，并在
+#proxy-groups、rule-providers等分段中用 <<: *锚点 合并引用。
+#配置拆分/重组流程会丢弃这些顶层自定义块，若不保留，重组后的配置会报
+#“yaml: unknown anchor 'xxx' referenced”而无法启动，进而导致断网。
+extract_yaml_anchors() {
+    awk '
+    function keepable(k) {
+        return k !~ /^(proxies|proxy-groups|proxy-providers|rules|rule-providers|sub-rules|listeners|dns|hosts|tun|sniffer|profile|mode|allow-lan|log-level|ipv6|mixed-port|redir-port|tproxy-port|external-controller|external-ui|external-ui-url|secret|authentication|experimental|routing-mark|unified-delay|find-process-mode)$/
+    }
+    function flush() {
+        if (keep && keepable(key)) printf "%s", buf
+        buf = ""
+        keep = 0
+        key = ""
+    }
+    function has_anchor(s) {
+        return s ~ /(^|[[:space:]])&[A-Za-z0-9_-]+([[:space:]]|$)/
+    }
+    {
+        line = $0
+        if (line ~ /^[A-Za-z_][A-Za-z0-9_.-]*:/) {
+            flush()
+            key = line
+            sub(/:.*/, "", key)
+            buf = line "\n"
+            if (has_anchor(line)) keep = 1
+        } else if (buf != "") {
+            buf = buf line "\n"
+            if (has_anchor(line)) keep = 1
+        }
+    }
+    END { flush() }
+    ' "$1"
+}
+
 prepare_clash_base_config() {
     ##########需要变更的配置###########
     [ "$ipv6_dns" != "OFF" ] && dns_v6='true' || dns_v6='false'
@@ -120,7 +156,7 @@ split_and_customize_yaml_parts() {
     #分割配置文件
     yaml_char='proxies proxy-groups proxy-providers rules rule-providers sub-rules listeners'
     for char in $yaml_char; do
-        sed -n "/^$char:/,/^[a-z]/ { /^[a-z]/d; p; }" $core_config >"$TMPDIR"/${char}.yaml
+        sed -n "/^$char:/,/^[a-z]/ { /^[a-z]/d; p; }" "${core_config_src:-$core_config}" >"$TMPDIR"/${char}.yaml
     done
     #跳过本地tls证书验证
     [ "$skip_cert" != "OFF" ] && sed -i 's/skip-cert-verify: false/skip-cert-verify: true/' "$TMPDIR"/proxies.yaml ||
@@ -199,6 +235,15 @@ add_custom_inbounds_and_rules() {
         cat "$TMPDIR"/rules.yaml >>"$TMPDIR"/rules.add
         mv -f "$TMPDIR"/rules.add "$TMPDIR"/rules.yaml
     }
+    #mix/route模式会启用respect-rules，此时配置里的DST-PORT,53劫持规则
+    #会把核心自身发往上游的DNS请求再次劫持(如Surfing的🌐 DNS_Hijack)，
+    #造成DNS解析死循环，最终表现为无法上网，需要移除该规则
+    if [ "$dns_mod" = "mix" ] || [ "$dns_mod" = "route" ]; then
+        if grep -qE '^[[:space:]]*-[[:space:]]*DST-PORT,53,' "$TMPDIR"/rules.yaml 2>/dev/null; then
+            sed -i "/^[[:space:]]*-[[:space:]]*DST-PORT,53,/d" "$TMPDIR"/rules.yaml
+            logger "已移除配置中与ShellCrash DNS冲突的DST-PORT,53规则，避免DNS解析回环！" 33 off
+        fi
+    fi
 }
 
 merger_yaml() {
@@ -229,8 +274,48 @@ merger_yaml() {
             yaml_add="$yaml_add $TMPDIR/${char}.yaml"
         }
     done
+    #保留源配置中的YAML锚点定义块，避免分段重组后出现未知锚点错误
+    yaml_anchors=
+    [ -s "$TMPDIR"/anchors.yaml ] && yaml_anchors="$TMPDIR"/anchors.yaml
     #合并完整配置文件
-    cut -c 1- "$TMPDIR"/set.yaml $yaml_dns $yaml_hosts $yaml_user $yaml_others $yaml_add >"$TMPDIR"/config.yaml
+    cut -c 1- $yaml_anchors "$TMPDIR"/set.yaml $yaml_dns $yaml_hosts $yaml_user $yaml_others $yaml_add >"$TMPDIR"/config.yaml
+}
+
+#检查“禁用配置覆写”时导入的完整配置是否与ShellCrash的端口及防火墙设置兼容
+#不兼容时直接使用原始配置，会出现核心已启动但流量被转发到错误端口/缺少
+#routing-mark导致回环等情况，表现为“无法连接到互联网”
+clash_config_compatible() {
+    [ -s "$core_config" ] || return 1
+    #核心入站端口必须与防火墙劫持端口一致
+    [ "$(sed -n 's/^mixed-port:[[:space:]]*//p' "$core_config" | head -n 1 | tr -d ' \r')" = "$mix_port" ] || return 1
+    [ "$(sed -n 's/^redir-port:[[:space:]]*//p' "$core_config" | head -n 1 | tr -d ' \r')" = "$redir_port" ] || return 1
+    [ "$(sed -n 's/^tproxy-port:[[:space:]]*//p' "$core_config" | head -n 1 | tr -d ' \r')" = "$tproxy_port" ] || return 1
+    #面板端口必须一致，否则ShellCrash无法通过API检测启动状态
+    cfg_db=$(sed -n 's/^external-controller:[[:space:]]*//p' "$core_config" | head -n 1 | tr -d ' \r')
+    case "$cfg_db" in
+    *":$db_port") ;;
+    *) return 1 ;;
+    esac
+    #DNS监听端口必须与防火墙DNS劫持端口一致
+    cfg_dns=$(sed -n '/^dns:/,/^[^[:space:]#]/s/^[[:space:]]*listen:[[:space:]]*//p' "$core_config" | head -n 1 | tr -d ' \r')
+    [ -n "$cfg_dns" ] && [ "${cfg_dns##*:}" = "$dns_port" ] || return 1
+    #routing-mark用于标记核心自身流量，避免Tproxy/Redir回环
+    [ "$(sed -n 's/^routing-mark:[[:space:]]*//p' "$core_config" | head -n 1 | tr -d ' \r')" = "$routing_mark" ] || return 1
+    #局域网代理必须开启
+    [ "$(sed -n 's/^allow-lan:[[:space:]]*//p' "$core_config" | head -n 1 | tr -d ' \r')" = "true" ] || return 1
+    #tun开关必须与当前代理模式匹配
+    cfg_tun=$(sed -n '/^tun:/,/^[^[:space:]#]/s/^[[:space:]]*enable:[[:space:]]*//p' "$core_config" | head -n 1 | tr -d ' \r')
+    [ -z "$cfg_tun" ] && {
+        #兼容 tun: {enable: true} 这种单行写法
+        grep -q '^tun:.*enable:[[:space:]]*true' "$core_config" && cfg_tun=true
+        grep -q '^tun:.*enable:[[:space:]]*false' "$core_config" && cfg_tun=false
+    }
+    if [ "$redir_mod" = "Tun" -o "$redir_mod" = "Mix" ]; then
+        [ "$cfg_tun" = "true" ] || return 1
+    else
+        [ "$cfg_tun" = "true" ] && return 1
+    fi
+    return 0
 }
 
 test_yaml() {
@@ -240,12 +325,33 @@ test_yaml() {
         logger "$("$TMPDIR"/CrashCore -t -d "$BINDIR" -f "$TMPDIR"/config.yaml | grep -Eo 'error.*=.*')" 31
         logger "自定义配置文件校验失败！将使用基础配置文件启动！" 33
         logger "错误详情请参考 "$TMPDIR"/error.yaml 文件！" 33
-        mv -f "$TMPDIR"/config.yaml "$TMPDIR"/error.yaml >/dev/null 2>&1
+        cp -f "$TMPDIR"/config.yaml "$TMPDIR"/error.yaml >/dev/null 2>&1
+        #回退到仅包含ShellCrash基础配置的配置，丢弃无法解析的节点/规则分段
+        #避免核心无法启动或流量被转发到错误端口，导致路由器断网
         sed -i "/#自定义策略组开始/,/#自定义策略组结束/d" "$TMPDIR"/proxy-groups.yaml
         mv -f "$TMPDIR"/set_bak.yaml "$TMPDIR"/set.yaml >/dev/null 2>&1
-        #合并基础配置文件
-        cut -c 1- "$TMPDIR"/set.yaml $yaml_dns $yaml_add >"$TMPDIR"/config.yaml
+        #重新生成不依赖rule-set的DNS配置，确保基础配置可以独立通过校验
+        cat >"$TMPDIR"/dns_fallback.yaml <<EOF
+dns:
+  enable: true
+  listen: :$dns_port
+  use-hosts: true
+  ipv6: $dns_v6
+  default-nameserver: [ $dns_resolver ]
+  direct-nameserver: [ $dns_nameserver ]
+  enhanced-mode: fake-ip
+  fake-ip-range: 198.18.0.0/15
+  fake-ip-range6: fc00::/16
+  fake-ip-filter:
+    - '+.*'
+  nameserver: [ $dns_nameserver ]
+EOF
+        cut -c 1- "$TMPDIR"/set.yaml "$TMPDIR"/dns_fallback.yaml $yaml_hosts >"$TMPDIR"/config.yaml
+        rm -f "$TMPDIR"/dns_fallback.yaml
         sed -i "/#自定义/d" "$TMPDIR"/config.yaml
+        "$TMPDIR"/CrashCore -t -d "$BINDIR" -f "$TMPDIR"/config.yaml >/dev/null 2>&1 &&
+            logger "已回退为基础配置，未加载导入配置的节点和规则，当前可正常上网！" 33 ||
+            logger "基础配置校验仍然失败，请检查ShellCrash设置！" 31
     fi
 }
 
@@ -253,15 +359,27 @@ finalize_clash_yaml() {
     #建立软连接
     [ ""$TMPDIR"" = ""$BINDIR"" ] || ln -sf "$TMPDIR"/config.yaml "$BINDIR"/config.yaml 2>/dev/null || cp -f "$TMPDIR"/config.yaml "$BINDIR"/config.yaml
     #清理缓存
-    for char in $yaml_char set set_bak dns hosts; do
+    for char in $yaml_char set set_bak dns hosts anchors; do
         rm -f "$TMPDIR"/${char}.yaml
     done
+    rm -f "$TMPDIR"/core_config.lf
 }
 
 #修饰clash配置文件
 modify_yaml() {
+    rm -f "$TMPDIR"/anchors.yaml
+    #删除上次运行可能遗留的软链接，避免写入时覆盖原始的导入配置
+    rm -f "$TMPDIR"/config.yaml
+    #统一换行符，兼容Windows编辑后上传的CRLF配置，避免锚点识别和分段异常
+    tr -d '\r' <"$core_config" >"$TMPDIR"/core_config.lf 2>/dev/null
+    [ -s "$TMPDIR"/core_config.lf ] && core_config_src="$TMPDIR"/core_config.lf || core_config_src="$core_config"
+    #Surfing等第三方配置的订阅链接占位符提醒
+    grep -q '此处引入您的Clash订阅链接地址' "$core_config_src" 2>/dev/null &&
+        logger "检测到配置中的订阅链接仍为占位符，请先编辑配置文件填入订阅地址！" 33 off
     prepare_clash_base_config
     generate_set_and_hosts_yaml
+    #提取源配置中的YAML锚点定义块(如Surfing配置)
+    extract_yaml_anchors "$core_config_src" >"$TMPDIR"/anchors.yaml 2>/dev/null
     split_and_customize_yaml_parts
     add_custom_inbounds_and_rules
     merger_yaml

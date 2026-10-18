@@ -8,7 +8,7 @@ echo "**                             by  Juewuy    **"
 echo "***********************************************"
 
 language=chs
-[ -z "$url" ] && url="https://testingcf.jsdelivr.net/gh/juewuy/ShellCrash@master"
+[ -z "$url" ] && url="https://testingcf.jsdelivr.net/gh/shiyun177/ShellCrash@dev"
 
 # 内置工具
 cecho() {
@@ -47,7 +47,7 @@ webget() {
     fi
 }
 error_down() {
-    cecho "请参考 \033[32mhttps://github.com/juewuy/ShellCrash/blob/master/README_CN.md"
+    cecho "请参考 \033[32mhttps://github.com/shiyun177/ShellCrash/blob/dev/README_CN.md"
     cecho "\033[33m使用其他安装源重新安装！\033[0m"
 }
 

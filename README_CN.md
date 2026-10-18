@@ -28,6 +28,9 @@
 - **多模式运行**：支持路由模式、本机模式等多种流量转发模式切换。
 - **一键维护**：内置脚本在线更新功能，保持版本与功能的及时更迭。
 
+> [!NOTE]
+> 本仓库额外支持直接导入 [Surfing](https://github.com/GitMetaio/Surfing) 的 `config.yaml`（含 YAML 锚点），并针对小米万兆路由器官方固件做了断网防护。详见 [README_Surfing.md](README_Surfing.md)。
+
 ## :computer: 设备支持
 
 ShellCrash 旨在兼容绝大多数基于 Linux 内核的网络设备：
