@@ -122,9 +122,9 @@ Surfing 仓库自带的配置中，三个 `proxy-providers` 的 `url` 都是占�
 > 已解锁 SSH。该固件的 TProxy 路径有已知问题（规则计数增长但数据包不能投递到
 > 透明 socket），推荐使用 **Tun 模式**；Redir 模式可用，但只覆盖 TCP。
 
-1. 安装 ShellCrash（本仓库已把安装源改为 `shiyun177/ShellCrash@dev`）：
+1. 安装 ShellCrash（本仓库已把安装源改为 `shiyun177/ShellCrash@master`）：
    ```sh
-   sh -c "$(curl -kfsSL https://testingcf.jsdelivr.net/gh/shiyun177/ShellCrash@dev/install.sh)"
+   sh -c "$(curl -kfsSL https://testingcf.jsdelivr.net/gh/shiyun177/ShellCrash@master/install.sh)"
    ```
    确认内核为 **meta（Mihomo）**，`crash` 命令可用。`install.sh` 会把
    `ShellCrash.tar.gz`（已包含本仓库的修改）解压到安装目录。

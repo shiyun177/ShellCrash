@@ -19,7 +19,7 @@
 
 ---
 
-> **Fork notice:** This is [`shiyun177/ShellCrash`](https://github.com/shiyun177/ShellCrash), a fork of [juewuy/ShellCrash](https://github.com/juewuy/ShellCrash). It adds direct support for [Surfing](https://github.com/GitMetaio/Surfing)'s `config.yaml` (including YAML anchors) and fixes the "no internet" issue after importing it on Xiaomi 10G router official firmware. The install commands below use this fork's `dev` branch. See [README_Surfing.md](README_Surfing.md).
+> **Fork notice:** This is [`shiyun177/ShellCrash`](https://github.com/shiyun177/ShellCrash), a fork of [juewuy/ShellCrash](https://github.com/juewuy/ShellCrash). It adds direct support for [Surfing](https://github.com/GitMetaio/Surfing)'s `config.yaml` (including YAML anchors) and fixes the "no internet" issue after importing it on Xiaomi 10G router official firmware. The install commands below use this fork's `master` branch. See [README_Surfing.md](README_Surfing.md).
 
 ## :rocket: Core Features
 
@@ -60,7 +60,7 @@ ShellCrash is designed to be compatible with the vast majority of network device
 
 > Install via wget (jsDelivr CDN source)
 ```sh
-export url='https://testingcf.jsdelivr.net/gh/shiyun177/ShellCrash@dev' \
+export url='https://testingcf.jsdelivr.net/gh/shiyun177/ShellCrash@master' \
   && wget -q --no-check-certificate -O /tmp/install.sh $url/install_en.sh \
   && bash /tmp/install.sh \
   && . /etc/profile &> /dev/null
@@ -69,7 +69,7 @@ export url='https://testingcf.jsdelivr.net/gh/shiyun177/ShellCrash@dev' \
 > Or install via curl (GitHub raw source)
 
 ```sh
-export url='https://raw.githubusercontent.com/shiyun177/ShellCrash/dev' && bash -c "$(curl -kfsSl $url/install_en.sh)" && . /etc/profile &> /dev/null
+export url='https://raw.githubusercontent.com/shiyun177/ShellCrash/master' && bash -c "$(curl -kfsSl $url/install_en.sh)" && . /etc/profile &> /dev/null
 ```
 
 ### :satellite: Router Device Installation
@@ -77,7 +77,7 @@ export url='https://raw.githubusercontent.com/shiyun177/ShellCrash/dev' && bash 
 **Installation via `curl`:**
 > GitHub Source (Recommended for overseas environments or environments with proxy access)
 ```sh
-export url='https://raw.githubusercontent.com/shiyun177/ShellCrash/dev' \
+export url='https://raw.githubusercontent.com/shiyun177/ShellCrash/master' \
   && sh -c "$(curl -kfsSl $url/install_en.sh)" \
   && . /etc/profile &> /dev/null
 ```
@@ -85,7 +85,7 @@ export url='https://raw.githubusercontent.com/shiyun177/ShellCrash/dev' \
 > Or jsDelivr CDN source
 
 ```sh
-export url='https://testingcf.jsdelivr.net/gh/shiyun177/ShellCrash@dev' \
+export url='https://testingcf.jsdelivr.net/gh/shiyun177/ShellCrash@master' \
   && sh -c "$(curl -kfsSl $url/install_en.sh)" \
   && . /etc/profile &> /dev/null
 ```
@@ -93,7 +93,7 @@ export url='https://testingcf.jsdelivr.net/gh/shiyun177/ShellCrash@dev' \
 **Installation via `wget`:**
 > GitHub Source (Recommended for overseas environments or environments with proxy access)
 ```sh
-export url='https://raw.githubusercontent.com/shiyun177/ShellCrash/dev' \
+export url='https://raw.githubusercontent.com/shiyun177/ShellCrash/master' \
   && wget -q --no-check-certificate -O /tmp/install.sh $url/install_en.sh \
   && sh /tmp/install.sh \
   && . /etc/profile &> /dev/null
@@ -101,7 +101,7 @@ export url='https://raw.githubusercontent.com/shiyun177/ShellCrash/dev' \
 
 > Or jsDelivr CDN source
 ```sh
-export url='https://testingcf.jsdelivr.net/gh/shiyun177/ShellCrash@dev' \
+export url='https://testingcf.jsdelivr.net/gh/shiyun177/ShellCrash@master' \
   && wget -q --no-check-certificate -O /tmp/install.sh $url/install_en.sh \
   && sh /tmp/install.sh \
   && . /etc/profile &> /dev/null
@@ -111,7 +111,7 @@ export url='https://testingcf.jsdelivr.net/gh/shiyun177/ShellCrash@dev' \
 
 > Alternative jsDelivr CDN source
 ```sh
-export url='https://testingcf.jsdelivr.net/gh/shiyun177/ShellCrash@dev' \
+export url='https://testingcf.jsdelivr.net/gh/shiyun177/ShellCrash@master' \
   && wget -q -O /tmp/install.sh $url/install_en.sh \
   && sh /tmp/install.sh \
   && . /etc/profile &> /dev/null
@@ -124,7 +124,7 @@ export url='https://testingcf.jsdelivr.net/gh/shiyun177/ShellCrash@dev' \
 # Install necessary dependencies
 apk add --no-cache wget openrc ca-certificates tzdata nftables iproute2 dcron
 # Execute installation command
-export url='https://testingcf.jsdelivr.net/gh/shiyun177/ShellCrash@dev' \
+export url='https://testingcf.jsdelivr.net/gh/shiyun177/ShellCrash@master' \
   && wget -q --no-check-certificate -O /tmp/install.sh $url/install_en.sh \
   && sh /tmp/install.sh \
   && . /etc/profile &> /dev/null
@@ -169,7 +169,7 @@ crash -h     # View the list of command help
 
 ## :link: Related Links
 - FAQ: [Juewuy's Blog](https://juewuy.github.io/chang-jian-wen-ti/)
-- Changelog: [Commit History](https://github.com/shiyun177/ShellCrash/commits/dev)
+- Changelog: [Commit History](https://github.com/shiyun177/ShellCrash/commits/master)
 - Discussion: [Telegram Group](https://t.me/ShellClash)
 
 ## :scroll: License

@@ -8,7 +8,7 @@ echo "**                             by  Juewuy    **"
 echo "***********************************************"
 
 language=en
-[ -z "$url" ] && url="https://testingcf.jsdelivr.net/gh/shiyun177/ShellCrash@dev"
+[ -z "$url" ] && url="https://testingcf.jsdelivr.net/gh/shiyun177/ShellCrash@master"
 
 # Internal Tools
 cecho() {
@@ -47,7 +47,7 @@ webget() {
     fi
 }
 error_down() {
-    cecho "Please refer to \033[32mhttps://github.com/shiyun177/ShellCrash/blob/dev/README.md"
+    cecho "Please refer to \033[32mhttps://github.com/shiyun177/ShellCrash/blob/master/README.md"
     cecho "\033[33mUse an alternative source to reinstall!\033[0m"
 }
 
@@ -318,7 +318,6 @@ check_user() {
 	fi
 }
 check_version() {
-	echo "$url" | grep -q 'master' && setversion
 	webget /tmp/version "$url/version" echooff
 	[ "$result" = "200" ] && versionsh=$(cat /tmp/version)
 	rm -rf /tmp/version

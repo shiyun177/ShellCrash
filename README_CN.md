@@ -29,7 +29,7 @@
 - **一键维护**：内置脚本在线更新功能，保持版本与功能的及时更迭。
 
 > [!NOTE]
-> **Fork 说明：** 本仓库是 [`shiyun177/ShellCrash`](https://github.com/shiyun177/ShellCrash)，fork 自 [juewuy/ShellCrash](https://github.com/juewuy/ShellCrash)。本仓库增加了对 [Surfing](https://github.com/GitMetaio/Surfing) `config.yaml`（含 YAML 锚点）的直接导入支持，并修复了在小米万兆路由器官方固件上导入后无法上网的问题。下面的安装命令均已指向本仓库的 `dev` 分支，详细说明见 [README_Surfing.md](README_Surfing.md)。
+> **Fork 说明：** 本仓库是 [`shiyun177/ShellCrash`](https://github.com/shiyun177/ShellCrash)，fork 自 [juewuy/ShellCrash](https://github.com/juewuy/ShellCrash)。本仓库增加了对 [Surfing](https://github.com/GitMetaio/Surfing) `config.yaml`（含 YAML 锚点）的直接导入支持，并修复了在小米万兆路由器官方固件上导入后无法上网的问题。下面的安装命令均已指向本仓库的 `master` 分支，详细说明见 [README_Surfing.md](README_Surfing.md)。
 
 ## :computer: 设备支持
 
@@ -61,7 +61,7 @@ ShellCrash 旨在兼容绝大多数基于 Linux 内核的网络设备：
 
 > 使用 wget 安装（jsDelivr CDN 源）
 ```sh
-export url='https://testingcf.jsdelivr.net/gh/shiyun177/ShellCrash@dev' \
+export url='https://testingcf.jsdelivr.net/gh/shiyun177/ShellCrash@master' \
   && wget -q --no-check-certificate -O /tmp/install.sh $url/install.sh \
   && bash /tmp/install.sh \
   && . /etc/profile &> /dev/null
@@ -70,7 +70,7 @@ export url='https://testingcf.jsdelivr.net/gh/shiyun177/ShellCrash@dev' \
 > 或使用 curl 安装（GitHub 源）
 
 ```sh
-export url='https://raw.githubusercontent.com/shiyun177/ShellCrash/dev' \
+export url='https://raw.githubusercontent.com/shiyun177/ShellCrash/master' \
   && bash -c "$(curl -kfsSl $url/install.sh)" \
   && . /etc/profile &> /dev/null
 ```
@@ -80,7 +80,7 @@ export url='https://raw.githubusercontent.com/shiyun177/ShellCrash/dev' \
 **使用 `curl` 安装：**
 > GitHub 源（推荐海外环境或具备代理环境使用）
 ```sh
-export url='https://raw.githubusercontent.com/shiyun177/ShellCrash/dev' \
+export url='https://raw.githubusercontent.com/shiyun177/ShellCrash/master' \
   && sh -c "$(curl -kfsSl $url/install.sh)" \
   && . /etc/profile &> /dev/null
 ```
@@ -88,7 +88,7 @@ export url='https://raw.githubusercontent.com/shiyun177/ShellCrash/dev' \
 > 或 jsDelivr CDN 源
 
 ```sh
-export url='https://testingcf.jsdelivr.net/gh/shiyun177/ShellCrash@dev' \
+export url='https://testingcf.jsdelivr.net/gh/shiyun177/ShellCrash@master' \
   && sh -c "$(curl -kfsSl $url/install.sh)" \
   && . /etc/profile &> /dev/null
 ```
@@ -96,7 +96,7 @@ export url='https://testingcf.jsdelivr.net/gh/shiyun177/ShellCrash@dev' \
 **使用 `wget` 安装：**
 > GitHub 源（推荐海外环境或具备代理环境使用）
 ```sh
-export url='https://raw.githubusercontent.com/shiyun177/ShellCrash/dev' \
+export url='https://raw.githubusercontent.com/shiyun177/ShellCrash/master' \
   && wget -q --no-check-certificate -O /tmp/install.sh $url/install.sh \
   && sh /tmp/install.sh \
   && . /etc/profile &> /dev/null
@@ -104,7 +104,7 @@ export url='https://raw.githubusercontent.com/shiyun177/ShellCrash/dev' \
 
 > 或 jsDelivr CDN 源
 ```sh
-export url='https://testingcf.jsdelivr.net/gh/shiyun177/ShellCrash@dev' \
+export url='https://testingcf.jsdelivr.net/gh/shiyun177/ShellCrash@master' \
   && wget -q --no-check-certificate -O /tmp/install.sh $url/install.sh \
   && sh /tmp/install.sh \
   && . /etc/profile &> /dev/null
@@ -114,7 +114,7 @@ export url='https://testingcf.jsdelivr.net/gh/shiyun177/ShellCrash@dev' \
 
 > 备用 jsDelivr CDN 源
 ```sh
-export url='https://testingcf.jsdelivr.net/gh/shiyun177/ShellCrash@dev' \
+export url='https://testingcf.jsdelivr.net/gh/shiyun177/ShellCrash@master' \
   && wget -q -O /tmp/install.sh $url/install.sh \
   && sh /tmp/install.sh \
   && . /etc/profile &> /dev/null
@@ -128,7 +128,7 @@ export url='https://testingcf.jsdelivr.net/gh/shiyun177/ShellCrash@dev' \
 apk add --no-cache wget openrc ca-certificates tzdata nftables iproute2 dcron
 
 # 执行安装命令
-export url='https://testingcf.jsdelivr.net/gh/shiyun177/ShellCrash@dev' \
+export url='https://testingcf.jsdelivr.net/gh/shiyun177/ShellCrash@master' \
   && wget -q --no-check-certificate -O /tmp/install.sh $url/install.sh \
   && sh /tmp/install.sh \
   && . /etc/profile &> /dev/null
@@ -173,7 +173,7 @@ crash -h     # 查看命令帮助列表
 
 ## :link: 相关链接
 - 常见问题：[Juewuy's Blog](https://juewuy.github.io/chang-jian-wen-ti/)
-- 更新日志：[提交记录](https://github.com/shiyun177/ShellCrash/commits/dev)
+- 更新日志：[提交记录](https://github.com/shiyun177/ShellCrash/commits/master)
 - 交流反馈：[Telegram 讨论组](https://t.me/ShellClash)
 
 ---
