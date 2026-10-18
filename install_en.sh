@@ -92,9 +92,24 @@ set_alias() {
     done
 }
 gettar() {
+    # Prefer the version tag; jsDelivr's master branch cache may return an old archive.
+    tar_url="$url"
+    if [ -n "$versionsh" ]; then
+        case "$url" in
+        *@master*) tar_url="${url%@master}@$versionsh" ;;
+        */master) tar_url="${url%/master}/$versionsh" ;;
+        esac
+    fi
     # Remove the old package first so a failed download cannot reuse stale data.
     rm -f /tmp/ShellCrash.tar.gz
-    webget /tmp/ShellCrash.tar.gz "$url/ShellCrash.tar.gz" >/dev/null 2>&1
+    webget /tmp/ShellCrash.tar.gz "$tar_url/ShellCrash.tar.gz" >/dev/null 2>&1
+    if [ "$result" != "200" ] || [ ! -s /tmp/ShellCrash.tar.gz ]; then
+        # Fall back to the original URL when the tag does not exist.
+        if [ "$tar_url" != "$url" ]; then
+            rm -f /tmp/ShellCrash.tar.gz
+            webget /tmp/ShellCrash.tar.gz "$url/ShellCrash.tar.gz" >/dev/null 2>&1
+        fi
+    fi
     if [ "$result" != "200" ] || [ ! -s /tmp/ShellCrash.tar.gz ]; then
         cecho "\033[33mFile download failed!\033[0m"
         rm -f /tmp/ShellCrash.tar.gz

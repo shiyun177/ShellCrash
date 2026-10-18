@@ -92,9 +92,24 @@ set_alias() {
     done
 }
 gettar() {
+    #优先按版本号(tag)下载，避免 jsDelivr 的 master 分支缓存返回旧安装包
+    tar_url="$url"
+    if [ -n "$versionsh" ]; then
+        case "$url" in
+        *@master*) tar_url="${url%@master}@$versionsh" ;;
+        */master) tar_url="${url%/master}/$versionsh" ;;
+        esac
+    fi
     #先清理旧安装包，避免下载失败时误用上一次的缓存文件
     rm -f /tmp/ShellCrash.tar.gz
-    webget /tmp/ShellCrash.tar.gz "$url/ShellCrash.tar.gz" >/dev/null 2>&1
+    webget /tmp/ShellCrash.tar.gz "$tar_url/ShellCrash.tar.gz" >/dev/null 2>&1
+    if [ "$result" != "200" ] || [ ! -s /tmp/ShellCrash.tar.gz ]; then
+        #tag 不存在时回退到原地址
+        if [ "$tar_url" != "$url" ]; then
+            rm -f /tmp/ShellCrash.tar.gz
+            webget /tmp/ShellCrash.tar.gz "$url/ShellCrash.tar.gz" >/dev/null 2>&1
+        fi
+    fi
     if [ "$result" != "200" ] || [ ! -s /tmp/ShellCrash.tar.gz ]; then
         cecho "\033[33m文件下载失败！\033[0m"
         rm -f /tmp/ShellCrash.tar.gz
