@@ -124,7 +124,7 @@ Surfing 仓库自带的配置中，三个 `proxy-providers` 的 `url` 都是占�
 
 1. 安装 ShellCrash（本仓库已把安装源改为 `shiyun177/ShellCrash@master`）：
    ```sh
-   sh -c "$(curl -kfsSL https://testingcf.jsdelivr.net/gh/shiyun177/ShellCrash@master/install.sh)"
+   sh -c "$(curl -kfsSL https://fastly.jsdelivr.net/gh/shiyun177/ShellCrash@master/install.sh)"
    ```
    确认内核为 **meta（Mihomo）**，`crash` 命令可用。`install.sh` 会把
    `ShellCrash.tar.gz`（已包含本仓库的修改）解压到安装目录。

@@ -8,7 +8,7 @@ echo "**                             by  Juewuy    **"
 echo "***********************************************"
 
 language=chs
-[ -z "$url" ] && url="https://testingcf.jsdelivr.net/gh/shiyun177/ShellCrash@master"
+[ -z "$url" ] && url="https://fastly.jsdelivr.net/gh/shiyun177/ShellCrash@master"
 
 # 内置工具
 cecho() {

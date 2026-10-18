@@ -60,7 +60,7 @@ ShellCrash is designed to be compatible with the vast majority of network device
 
 > Install via wget (jsDelivr CDN source)
 ```sh
-export url='https://testingcf.jsdelivr.net/gh/shiyun177/ShellCrash@master' \
+export url='https://fastly.jsdelivr.net/gh/shiyun177/ShellCrash@master' \
   && wget -q --no-check-certificate -O /tmp/install.sh $url/install_en.sh \
   && bash /tmp/install.sh \
   && . /etc/profile &> /dev/null
@@ -85,7 +85,7 @@ export url='https://raw.githubusercontent.com/shiyun177/ShellCrash/master' \
 > Or jsDelivr CDN source
 
 ```sh
-export url='https://testingcf.jsdelivr.net/gh/shiyun177/ShellCrash@master' \
+export url='https://fastly.jsdelivr.net/gh/shiyun177/ShellCrash@master' \
   && sh -c "$(curl -kfsSl $url/install_en.sh)" \
   && . /etc/profile &> /dev/null
 ```
@@ -101,7 +101,7 @@ export url='https://raw.githubusercontent.com/shiyun177/ShellCrash/master' \
 
 > Or jsDelivr CDN source
 ```sh
-export url='https://testingcf.jsdelivr.net/gh/shiyun177/ShellCrash@master' \
+export url='https://fastly.jsdelivr.net/gh/shiyun177/ShellCrash@master' \
   && wget -q --no-check-certificate -O /tmp/install.sh $url/install_en.sh \
   && sh /tmp/install.sh \
   && . /etc/profile &> /dev/null
@@ -111,7 +111,7 @@ export url='https://testingcf.jsdelivr.net/gh/shiyun177/ShellCrash@master' \
 
 > Alternative jsDelivr CDN source
 ```sh
-export url='https://testingcf.jsdelivr.net/gh/shiyun177/ShellCrash@master' \
+export url='https://fastly.jsdelivr.net/gh/shiyun177/ShellCrash@master' \
   && wget -q -O /tmp/install.sh $url/install_en.sh \
   && sh /tmp/install.sh \
   && . /etc/profile &> /dev/null
@@ -124,7 +124,7 @@ export url='https://testingcf.jsdelivr.net/gh/shiyun177/ShellCrash@master' \
 # Install necessary dependencies
 apk add --no-cache wget openrc ca-certificates tzdata nftables iproute2 dcron
 # Execute installation command
-export url='https://testingcf.jsdelivr.net/gh/shiyun177/ShellCrash@master' \
+export url='https://fastly.jsdelivr.net/gh/shiyun177/ShellCrash@master' \
   && wget -q --no-check-certificate -O /tmp/install.sh $url/install_en.sh \
   && sh /tmp/install.sh \
   && . /etc/profile &> /dev/null

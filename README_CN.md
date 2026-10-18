@@ -61,7 +61,7 @@ ShellCrash 旨在兼容绝大多数基于 Linux 内核的网络设备：
 
 > 使用 wget 安装（jsDelivr CDN 源）
 ```sh
-export url='https://testingcf.jsdelivr.net/gh/shiyun177/ShellCrash@master' \
+export url='https://fastly.jsdelivr.net/gh/shiyun177/ShellCrash@master' \
   && wget -q --no-check-certificate -O /tmp/install.sh $url/install.sh \
   && bash /tmp/install.sh \
   && . /etc/profile &> /dev/null
@@ -88,7 +88,7 @@ export url='https://raw.githubusercontent.com/shiyun177/ShellCrash/master' \
 > 或 jsDelivr CDN 源
 
 ```sh
-export url='https://testingcf.jsdelivr.net/gh/shiyun177/ShellCrash@master' \
+export url='https://fastly.jsdelivr.net/gh/shiyun177/ShellCrash@master' \
   && sh -c "$(curl -kfsSl $url/install.sh)" \
   && . /etc/profile &> /dev/null
 ```
@@ -104,7 +104,7 @@ export url='https://raw.githubusercontent.com/shiyun177/ShellCrash/master' \
 
 > 或 jsDelivr CDN 源
 ```sh
-export url='https://testingcf.jsdelivr.net/gh/shiyun177/ShellCrash@master' \
+export url='https://fastly.jsdelivr.net/gh/shiyun177/ShellCrash@master' \
   && wget -q --no-check-certificate -O /tmp/install.sh $url/install.sh \
   && sh /tmp/install.sh \
   && . /etc/profile &> /dev/null
@@ -114,7 +114,7 @@ export url='https://testingcf.jsdelivr.net/gh/shiyun177/ShellCrash@master' \
 
 > 备用 jsDelivr CDN 源
 ```sh
-export url='https://testingcf.jsdelivr.net/gh/shiyun177/ShellCrash@master' \
+export url='https://fastly.jsdelivr.net/gh/shiyun177/ShellCrash@master' \
   && wget -q -O /tmp/install.sh $url/install.sh \
   && sh /tmp/install.sh \
   && . /etc/profile &> /dev/null
@@ -128,7 +128,7 @@ export url='https://testingcf.jsdelivr.net/gh/shiyun177/ShellCrash@master' \
 apk add --no-cache wget openrc ca-certificates tzdata nftables iproute2 dcron
 
 # 执行安装命令
-export url='https://testingcf.jsdelivr.net/gh/shiyun177/ShellCrash@master' \
+export url='https://fastly.jsdelivr.net/gh/shiyun177/ShellCrash@master' \
   && wget -q --no-check-certificate -O /tmp/install.sh $url/install.sh \
   && sh /tmp/install.sh \
   && . /etc/profile &> /dev/null
