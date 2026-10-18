@@ -4,8 +4,8 @@
   <a target="_blank" href="https://github.com/MetaCubeX/mihomo/releases">
     <img src="https://img.shields.io/github/release/MetaCubeX/mihomo.svg?style=flat-square&label=Core">
   </a>
-  <a target="_blank" href="https://github.com/juewuy/ShellCrash/releases">
-    <img src="https://img.shields.io/github/release/juewuy/ShellCrash.svg?style=flat-square&label=ShellCrash&colorB=green">
+  <a target="_blank" href="https://github.com/shiyun177/ShellCrash">
+    <img src="https://img.shields.io/badge/ShellCrash-fork-blue?style=flat-square">
   </a>
 </p>
 
@@ -18,6 +18,8 @@
 </p>
 
 ---
+
+> **Fork notice:** This is [`shiyun177/ShellCrash`](https://github.com/shiyun177/ShellCrash), a fork of [juewuy/ShellCrash](https://github.com/juewuy/ShellCrash). It adds direct support for [Surfing](https://github.com/GitMetaio/Surfing)'s `config.yaml` (including YAML anchors) and fixes the "no internet" issue after importing it on Xiaomi 10G router official firmware. The install commands below use this fork's `dev` branch. See [README_Surfing.md](README_Surfing.md).
 
 ## :rocket: Core Features
 
@@ -38,7 +40,7 @@ ShellCrash is designed to be compatible with the vast majority of network device
 * **Other Devices**: Compatible with other devices based on Linux/GNU or Linux/busybox.
 * **Docker**：Compatible with Docker environments (e.g., Synology, PVE, etc.).
 
-> For additional device support, please submit an [Issue](https://github.com/juewuy/ShellCrash/issues) or provide feedback in the [Telegram Group](https://t.me/ShellClash) (please include the device model and the output of the `uname -a` command).
+> For additional device support, please submit an [Issue](https://github.com/shiyun177/ShellCrash/issues) or provide feedback in the [Telegram Group](https://t.me/ShellClash) (please include the device model and the output of the `uname -a` command).
 
 ---
 
@@ -58,16 +60,16 @@ ShellCrash is designed to be compatible with the vast majority of network device
 
 > Install via wget (jsDelivr CDN source)
 ```sh
-export url='https://testingcf.jsdelivr.net/gh/juewuy/ShellCrash@dev' \
+export url='https://testingcf.jsdelivr.net/gh/shiyun177/ShellCrash@dev' \
   && wget -q --no-check-certificate -O /tmp/install.sh $url/install_en.sh \
   && bash /tmp/install.sh \
   && . /etc/profile &> /dev/null
 ```
 
-> Or install via curl (Author's private source)
+> Or install via curl (GitHub raw source)
 
 ```sh
-export url='https://gh.jwsc.eu.org/dev' && bash -c "$(curl -kfsSl $url/install_en.sh)" && . /etc/profile &> /dev/null
+export url='https://raw.githubusercontent.com/shiyun177/ShellCrash/dev' && bash -c "$(curl -kfsSl $url/install_en.sh)" && . /etc/profile &> /dev/null
 ```
 
 ### :satellite: Router Device Installation
@@ -75,7 +77,7 @@ export url='https://gh.jwsc.eu.org/dev' && bash -c "$(curl -kfsSl $url/install_e
 **Installation via `curl`:**
 > GitHub Source (Recommended for overseas environments or environments with proxy access)
 ```sh
-export url='https://raw.githubusercontent.com/juewuy/ShellCrash/dev' \
+export url='https://raw.githubusercontent.com/shiyun177/ShellCrash/dev' \
   && sh -c "$(curl -kfsSl $url/install_en.sh)" \
   && . /etc/profile &> /dev/null
 ```
@@ -83,20 +85,15 @@ export url='https://raw.githubusercontent.com/juewuy/ShellCrash/dev' \
 > Or jsDelivr CDN source
 
 ```sh
-export url='https://testingcf.jsdelivr.net/gh/juewuy/ShellCrash@dev' \
+export url='https://testingcf.jsdelivr.net/gh/shiyun177/ShellCrash@dev' \
   && sh -c "$(curl -kfsSl $url/install_en.sh)" \
   && . /etc/profile &> /dev/null
-```
-
-> Or Author's private source
-```sh
-export url='https://gh.jwsc.eu.org/dev' && sh -c "$(curl -kfsSl $url/install_en.sh)" && . /etc/profile &> /dev/null
 ```
 
 **Installation via `wget`:**
 > GitHub Source (Recommended for overseas environments or environments with proxy access)
 ```sh
-export url='https://raw.githubusercontent.com/juewuy/ShellCrash/dev' \
+export url='https://raw.githubusercontent.com/shiyun177/ShellCrash/dev' \
   && wget -q --no-check-certificate -O /tmp/install.sh $url/install_en.sh \
   && sh /tmp/install.sh \
   && . /etc/profile &> /dev/null
@@ -104,7 +101,7 @@ export url='https://raw.githubusercontent.com/juewuy/ShellCrash/dev' \
 
 > Or jsDelivr CDN source
 ```sh
-export url='https://testingcf.jsdelivr.net/gh/juewuy/ShellCrash@dev' \
+export url='https://testingcf.jsdelivr.net/gh/shiyun177/ShellCrash@dev' \
   && wget -q --no-check-certificate -O /tmp/install.sh $url/install_en.sh \
   && sh /tmp/install.sh \
   && . /etc/profile &> /dev/null
@@ -112,9 +109,9 @@ export url='https://testingcf.jsdelivr.net/gh/juewuy/ShellCrash@dev' \
 
 ### :pager: Installation for Legacy Devices with Older `wget` Versions
 
-> Author's private HTTP beta source
+> Alternative jsDelivr CDN source
 ```sh
-export url='http://t.jwsc.eu.org' \
+export url='https://testingcf.jsdelivr.net/gh/shiyun177/ShellCrash@dev' \
   && wget -q -O /tmp/install.sh $url/install_en.sh \
   && sh /tmp/install.sh \
   && . /etc/profile &> /dev/null
@@ -127,7 +124,7 @@ export url='http://t.jwsc.eu.org' \
 # Install necessary dependencies
 apk add --no-cache wget openrc ca-certificates tzdata nftables iproute2 dcron
 # Execute installation command
-export url='https://testingcf.jsdelivr.net/gh/juewuy/ShellCrash@dev' \
+export url='https://testingcf.jsdelivr.net/gh/shiyun177/ShellCrash@dev' \
   && wget -q --no-check-certificate -O /tmp/install.sh $url/install_en.sh \
   && sh /tmp/install.sh \
   && . /etc/profile &> /dev/null
@@ -138,6 +135,8 @@ export url='https://testingcf.jsdelivr.net/gh/juewuy/ShellCrash@dev' \
  Please visit the official Docker image:
 
 - [ShellCrash on Docker Hub](https://hub.docker.com/r/juewuy/shellcrash)
+
+> Note: the Docker image is the upstream `juewuy/shellcrash` image and does **not** include this fork's Surfing compatibility changes.
 
 
 ### :package: Local Installation
@@ -170,7 +169,7 @@ crash -h     # View the list of command help
 
 ## :link: Related Links
 - FAQ: [Juewuy's Blog](https://juewuy.github.io/chang-jian-wen-ti/)
-- Changelog: [Release History](https://github.com/juewuy/ShellCrash/releases)
+- Changelog: [Commit History](https://github.com/shiyun177/ShellCrash/commits/dev)
 - Discussion: [Telegram Group](https://t.me/ShellClash)
 
 ## :scroll: License

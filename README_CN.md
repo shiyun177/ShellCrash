@@ -4,8 +4,8 @@
   <a target="_blank" href="https://github.com/MetaCubeX/mihomo/releases">
     <img src="https://img.shields.io/github/release/MetaCubeX/mihomo.svg?style=flat-square&label=Core">
   </a>
-  <a target="_blank" href="https://github.com/juewuy/ShellCrash/releases">
-    <img src="https://img.shields.io/github/release/juewuy/ShellCrash.svg?style=flat-square&label=ShellCrash&colorB=green">
+  <a target="_blank" href="https://github.com/shiyun177/ShellCrash">
+    <img src="https://img.shields.io/badge/ShellCrash-fork-blue?style=flat-square">
   </a>
 </p>
 
@@ -29,7 +29,7 @@
 - **一键维护**：内置脚本在线更新功能，保持版本与功能的及时更迭。
 
 > [!NOTE]
-> 本仓库额外支持直接导入 [Surfing](https://github.com/GitMetaio/Surfing) 的 `config.yaml`（含 YAML 锚点），并针对小米万兆路由器官方固件做了断网防护。详见 [README_Surfing.md](README_Surfing.md)。
+> **Fork 说明：** 本仓库是 [`shiyun177/ShellCrash`](https://github.com/shiyun177/ShellCrash)，fork 自 [juewuy/ShellCrash](https://github.com/juewuy/ShellCrash)。本仓库增加了对 [Surfing](https://github.com/GitMetaio/Surfing) `config.yaml`（含 YAML 锚点）的直接导入支持，并修复了在小米万兆路由器官方固件上导入后无法上网的问题。下面的安装命令均已指向本仓库的 `dev` 分支，详细说明见 [README_Surfing.md](README_Surfing.md)。
 
 ## :computer: 设备支持
 
@@ -41,7 +41,7 @@ ShellCrash 旨在兼容绝大多数基于 Linux 内核的网络设备：
 * **其他设备**：兼容各种基于Linux/GNU或者Linux/busybox开发的设备。
 * **Docker**：部分可能不兼容的设备（如群辉、PVE），支持docker环境运行。
 
-> 更多设备支持，请提交 [Issue](https://github.com/juewuy/ShellCrash/issues) 或前往 [Telegram 群组](https://t.me/ShellClash) 反馈（请附上设备型号及 `uname -a` 命令的输出信息）。
+> 更多设备支持，请提交 [Issue](https://github.com/shiyun177/ShellCrash/issues) 或前往 [Telegram 群组](https://t.me/ShellClash) 反馈（请附上设备型号及 `uname -a` 命令的输出信息）。
 
 ---
 
@@ -61,16 +61,16 @@ ShellCrash 旨在兼容绝大多数基于 Linux 内核的网络设备：
 
 > 使用 wget 安装（jsDelivr CDN 源）
 ```sh
-export url='https://testingcf.jsdelivr.net/gh/juewuy/ShellCrash@master' \
+export url='https://testingcf.jsdelivr.net/gh/shiyun177/ShellCrash@dev' \
   && wget -q --no-check-certificate -O /tmp/install.sh $url/install.sh \
   && bash /tmp/install.sh \
   && . /etc/profile &> /dev/null
 ```
 
-> 或使用 curl 安装（作者私人源）
+> 或使用 curl 安装（GitHub 源）
 
 ```sh
-export url='https://gh.jwsc.eu.org/master' \
+export url='https://raw.githubusercontent.com/shiyun177/ShellCrash/dev' \
   && bash -c "$(curl -kfsSl $url/install.sh)" \
   && . /etc/profile &> /dev/null
 ```
@@ -80,7 +80,7 @@ export url='https://gh.jwsc.eu.org/master' \
 **使用 `curl` 安装：**
 > GitHub 源（推荐海外环境或具备代理环境使用）
 ```sh
-export url='https://raw.githubusercontent.com/juewuy/ShellCrash/master' \
+export url='https://raw.githubusercontent.com/shiyun177/ShellCrash/dev' \
   && sh -c "$(curl -kfsSl $url/install.sh)" \
   && . /etc/profile &> /dev/null
 ```
@@ -88,14 +88,7 @@ export url='https://raw.githubusercontent.com/juewuy/ShellCrash/master' \
 > 或 jsDelivr CDN 源
 
 ```sh
-export url='https://testingcf.jsdelivr.net/gh/juewuy/ShellCrash@master' \
-  && sh -c "$(curl -kfsSl $url/install.sh)" \
-  && . /etc/profile &> /dev/null
-```
-
-> 或作者私人源
-```sh
-export url='https://gh.jwsc.eu.org/master' \
+export url='https://testingcf.jsdelivr.net/gh/shiyun177/ShellCrash@dev' \
   && sh -c "$(curl -kfsSl $url/install.sh)" \
   && . /etc/profile &> /dev/null
 ```
@@ -103,7 +96,7 @@ export url='https://gh.jwsc.eu.org/master' \
 **使用 `wget` 安装：**
 > GitHub 源（推荐海外环境或具备代理环境使用）
 ```sh
-export url='https://raw.githubusercontent.com/juewuy/ShellCrash/master' \
+export url='https://raw.githubusercontent.com/shiyun177/ShellCrash/dev' \
   && wget -q --no-check-certificate -O /tmp/install.sh $url/install.sh \
   && sh /tmp/install.sh \
   && . /etc/profile &> /dev/null
@@ -111,7 +104,7 @@ export url='https://raw.githubusercontent.com/juewuy/ShellCrash/master' \
 
 > 或 jsDelivr CDN 源
 ```sh
-export url='https://testingcf.jsdelivr.net/gh/juewuy/ShellCrash@master' \
+export url='https://testingcf.jsdelivr.net/gh/shiyun177/ShellCrash@dev' \
   && wget -q --no-check-certificate -O /tmp/install.sh $url/install.sh \
   && sh /tmp/install.sh \
   && . /etc/profile &> /dev/null
@@ -119,9 +112,9 @@ export url='https://testingcf.jsdelivr.net/gh/juewuy/ShellCrash@master' \
 
 ### :pager: 老旧设备使用低版本 `wget` 安装
 
-> 作者私人 http 内测源
+> 备用 jsDelivr CDN 源
 ```sh
-export url='http://t.jwsc.eu.org' \
+export url='https://testingcf.jsdelivr.net/gh/shiyun177/ShellCrash@dev' \
   && wget -q -O /tmp/install.sh $url/install.sh \
   && sh /tmp/install.sh \
   && . /etc/profile &> /dev/null
@@ -135,7 +128,7 @@ export url='http://t.jwsc.eu.org' \
 apk add --no-cache wget openrc ca-certificates tzdata nftables iproute2 dcron
 
 # 执行安装命令
-export url='https://testingcf.jsdelivr.net/gh/juewuy/ShellCrash@master' \
+export url='https://testingcf.jsdelivr.net/gh/shiyun177/ShellCrash@dev' \
   && wget -q --no-check-certificate -O /tmp/install.sh $url/install.sh \
   && sh /tmp/install.sh \
   && . /etc/profile &> /dev/null
@@ -146,6 +139,8 @@ export url='https://testingcf.jsdelivr.net/gh/juewuy/ShellCrash@master' \
  请访问官方 Docker 镜像：
 
 - [ShellCrash on Docker Hub](https://hub.docker.com/r/juewuy/shellcrash)
+
+> 注意：Docker 镜像仍是上游 `juewuy/shellcrash`，**不包含**本仓库针对 Surfing 的兼容修改。
 
 
 ### :package: 本地安装
@@ -178,7 +173,7 @@ crash -h     # 查看命令帮助列表
 
 ## :link: 相关链接
 - 常见问题：[Juewuy's Blog](https://juewuy.github.io/chang-jian-wen-ti/)
-- 更新日志：[Release History](https://github.com/juewuy/ShellCrash/releases)
+- 更新日志：[提交记录](https://github.com/shiyun177/ShellCrash/commits/dev)
 - 交流反馈：[Telegram 讨论组](https://t.me/ShellClash)
 
 ---
