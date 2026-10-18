@@ -28,6 +28,7 @@ ckcmd() {
 webget() {
     #参数【$1】代表下载目录，【$2】代表在线地址
     #参数【$3】代表输出显示，【$4】不启用重定向
+    result=''
     if curl --version >/dev/null 2>&1; then
         [ "$3" = "echooff" ] && progress='-s' || progress='-#'
         [ -z "$4" ] && redirect='-L' || redirect=''
@@ -91,29 +92,41 @@ set_alias() {
     done
 }
 gettar() {
+    #先清理旧安装包，避免下载失败时误用上一次的缓存文件
+    rm -f /tmp/ShellCrash.tar.gz
     webget /tmp/ShellCrash.tar.gz "$url/ShellCrash.tar.gz" >/dev/null 2>&1
-    if [ "$result" != "200" ]; then
+    if [ "$result" != "200" ] || [ ! -s /tmp/ShellCrash.tar.gz ]; then
         cecho "\033[33m文件下载失败！\033[0m"
+        rm -f /tmp/ShellCrash.tar.gz
         error_down
         exit 1
-    else
-        "$CRASHDIR"/start.sh stop 2>/dev/null
-        # 解压
-        echo "-----------------------------------------------"
-        echo "开始解压文件！"
-        mkdir -p "$CRASHDIR" >/dev/null
-        tar -zxf '/tmp/ShellCrash.tar.gz' -C "$CRASHDIR"/ || tar -zxf '/tmp/ShellCrash.tar.gz' --no-same-owner -C "$CRASHDIR"/
-        if [ -s "$CRASHDIR"/init.sh ]; then
-            set_alias
-            . "$CRASHDIR"/init.sh >/dev/null
-            [ "$?" != 0 ] && cecho "\033[33m初始化失败，请尝试本地安装！\033[0m" && exit 1
-        else
-            rm -rf /tmp/ShellCrash.tar.gz
-            cecho "\033[33m文件解压失败！\033[0m"
-            error_down
-            exit 1
-        fi
     fi
+    #校验安装包完整性，避免把错误页/半截文件当成安装包
+    if ! tar -tzf /tmp/ShellCrash.tar.gz >/dev/null 2>&1; then
+        cecho "\033[33m安装包校验失败，请更换安装源重试！\033[0m"
+        rm -f /tmp/ShellCrash.tar.gz
+        error_down
+        exit 1
+    fi
+    "$CRASHDIR"/start.sh stop 2>/dev/null
+    # 解压
+    echo "-----------------------------------------------"
+    echo "开始解压文件！"
+    mkdir -p "$CRASHDIR" >/dev/null
+    tar -zxf '/tmp/ShellCrash.tar.gz' -C "$CRASHDIR"/ || tar -zxf '/tmp/ShellCrash.tar.gz' --no-same-owner -C "$CRASHDIR"/
+    if [ "$?" != "0" ] || [ ! -s "$CRASHDIR"/init.sh ] || [ ! -s "$CRASHDIR"/start.sh ] || [ ! -s "$CRASHDIR"/starts/clash_modify.sh ]; then
+        rm -f /tmp/ShellCrash.tar.gz
+        cecho "\033[33m文件解压失败！\033[0m"
+        error_down
+        exit 1
+    fi
+    set_alias
+    . "$CRASHDIR"/init.sh >/dev/null
+    if [ "$?" != "0" ]; then
+        cecho "\033[33m初始化失败，请尝试本地安装！\033[0m"
+        exit 1
+    fi
+    rm -f /tmp/ShellCrash.tar.gz
 }
 set_usb_dir() {
     while true; do
@@ -268,7 +281,7 @@ install() {
     echo "-----------------------------------------------"
     echo "开始从服务器获取安装文件！"
     echo "-----------------------------------------------"
-    gettar
+    gettar || exit 1
     echo "-----------------------------------------------"
     echo "ShellCrash 已经安装成功!"
     [ "$profile" = "~/.bashrc" ] && echo "请执行【. ~/.bashrc > /dev/null】命令以更新环境变量！"

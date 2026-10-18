@@ -28,6 +28,7 @@ ckcmd() {
 webget() {
     # Parameter [$1] Download Path, [$2] Online URL
     # Parameter [$3] Display Output, [$4] Disable Redirects
+    result=''
     if curl --version >/dev/null 2>&1; then
         [ "$3" = "echooff" ] && progress='-s' || progress='-#'
         [ -z "$4" ] && redirect='-L' || redirect=''
@@ -91,29 +92,41 @@ set_alias() {
     done
 }
 gettar() {
+    # Remove the old package first so a failed download cannot reuse stale data.
+    rm -f /tmp/ShellCrash.tar.gz
     webget /tmp/ShellCrash.tar.gz "$url/ShellCrash.tar.gz" >/dev/null 2>&1
-    if [ "$result" != "200" ]; then
+    if [ "$result" != "200" ] || [ ! -s /tmp/ShellCrash.tar.gz ]; then
         cecho "\033[33mFile download failed!\033[0m"
+        rm -f /tmp/ShellCrash.tar.gz
         error_down
         exit 1
-    else
-        "$CRASHDIR"/start.sh stop 2>/dev/null
-        # Extract
-        echo "-----------------------------------------------"
-        echo "Starting file extraction!"
-        mkdir -p "$CRASHDIR" >/dev/null
-        tar -zxf '/tmp/ShellCrash.tar.gz' -C "$CRASHDIR"/ || tar -zxf '/tmp/ShellCrash.tar.gz' --no-same-owner -C "$CRASHDIR"/
-        if [ -s "$CRASHDIR"/init.sh ]; then
-            set_alias
-            . "$CRASHDIR"/init.sh >/dev/null
-            [ "$?" != 0 ] && cecho "\033[33mInitialization failed, try local installation!\033[0m" && exit 1
-        else
-            rm -rf /tmp/ShellCrash.tar.gz
-            cecho "\033[33mFile extraction failed!\033[0m"
-            error_down
-            exit 1
-        fi
     fi
+    # Verify the archive before extracting (avoid HTML error pages / partial files).
+    if ! tar -tzf /tmp/ShellCrash.tar.gz >/dev/null 2>&1; then
+        cecho "\033[33mArchive verification failed, please try another source!\033[0m"
+        rm -f /tmp/ShellCrash.tar.gz
+        error_down
+        exit 1
+    fi
+    "$CRASHDIR"/start.sh stop 2>/dev/null
+    # Extract
+    echo "-----------------------------------------------"
+    echo "Starting file extraction!"
+    mkdir -p "$CRASHDIR" >/dev/null
+    tar -zxf '/tmp/ShellCrash.tar.gz' -C "$CRASHDIR"/ || tar -zxf '/tmp/ShellCrash.tar.gz' --no-same-owner -C "$CRASHDIR"/
+    if [ "$?" != "0" ] || [ ! -s "$CRASHDIR"/init.sh ] || [ ! -s "$CRASHDIR"/start.sh ] || [ ! -s "$CRASHDIR"/starts/clash_modify.sh ]; then
+        rm -f /tmp/ShellCrash.tar.gz
+        cecho "\033[33mFile extraction failed!\033[0m"
+        error_down
+        exit 1
+    fi
+    set_alias
+    . "$CRASHDIR"/init.sh >/dev/null
+    if [ "$?" != "0" ]; then
+        cecho "\033[33mInitialization failed, try local installation!\033[0m"
+        exit 1
+    fi
+    rm -f /tmp/ShellCrash.tar.gz
 }
 set_usb_dir() {
     while true; do
@@ -268,7 +281,7 @@ install() {
     echo "-----------------------------------------------"
     echo "Retrieving installation files from server..."
     echo "-----------------------------------------------"
-    gettar
+    gettar || exit 1
     echo "-----------------------------------------------"
     echo "ShellCrash installed successfully!"
     [ "$profile" = "~/.bashrc" ] && echo "Please run [. ~/.bashrc > /dev/null] to update environment variables!"
